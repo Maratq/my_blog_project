@@ -1,4 +1,3 @@
-
 import os
 from pathlib import Path
 
@@ -135,3 +134,7 @@ CKEDITOR_CONFIGS = {
         ],
     }
 }
+
+
+LOGOUT_REDIRECT_URL = "/"
+
