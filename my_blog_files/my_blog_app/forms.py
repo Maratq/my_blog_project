@@ -10,6 +10,7 @@ class SignUpForm(forms.Form):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'id': 'inputUsername',
+            'placeholder': 'Имя пользователя',
         }),
     )
 
@@ -18,6 +19,7 @@ class SignUpForm(forms.Form):
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
             'id': 'inputPassword',
+            'placeholder': "Пароль",
         }),
     )
 
@@ -26,6 +28,7 @@ class SignUpForm(forms.Form):
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
             'id': 'ReInputPassword',
+            'placeholder': "Повторите пароль",
         }),
     )
 
@@ -46,3 +49,21 @@ class SignUpForm(forms.Form):
         user.save()
         auth = authenticate(**self.cleaned_data)
         return auth
+
+
+class SignInForm(forms.Form):
+    username = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': "form-control",
+            'id': "inputUsername",
+        })
+    )
+    password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'class': "form-control mt-2",
+            'id': "inputPassword",
+        })
+    )
