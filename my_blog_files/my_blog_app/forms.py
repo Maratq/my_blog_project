@@ -25,7 +25,7 @@ class SignUpForm(forms.Form):
         required=True,
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'id': 'inputRepeatPassword',
+            'id': 'ReInputPassword',
         }),
     )
 
