@@ -7,6 +7,19 @@ from django.contrib.auth import login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from django.db.models import Q
+from taggit.models import Tag
+
+
+class TagView(View):
+    def get(self, request, slug, *args, **kwargs):
+        tag = get_object_or_404(Tag, slug=slug)
+        posts = Post.objects.filter(tag=tag)
+        common_tags = Post.tag.most_common()
+        return render(request, 'my_blog_app/tag.html', context={
+            'title': f'#ТЕГ {tag}',
+            'posts': posts,
+            'common_tags': common_tags
+        })
 
 
 class SearchResultsView(View):
@@ -25,6 +38,7 @@ class SearchResultsView(View):
             'results': page_obj,
             'count': paginator.count
         })
+
 
 class FeedbackView(View):
     def get(self, request, *args, **kwargs):
@@ -74,8 +88,12 @@ class MainView(View):
 class PostDetailView(View):
     def get(self, request, slug, *args, **kwargs):
         post = get_object_or_404(Post, url=slug)
+        common_tags = Post.tag.most_common()
+        last_posts = Post.objects.all().order_by('-id')[:5]
         return render(request, 'my_blog_app/post_detail.html', context={
             'post': post,
+            'common_tags': common_tags,
+            'last_posts': last_posts,
         })
 
 
