@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.core.paginator import Paginator
-from .models import Post
-from .forms import SignUpForm, SignInForm, FeedbackForm
-from django.contrib.auth import login
+from .models import Post, Comment
+from .forms import SignUpForm, SignInForm, FeedbackForm, CommentForm
+from django.contrib.auth import login,authenticate
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from django.db.models import Q
@@ -90,10 +90,24 @@ class PostDetailView(View):
         post = get_object_or_404(Post, url=slug)
         common_tags = Post.tag.most_common()
         last_posts = Post.objects.all().order_by('-id')[:5]
+        comment_form = CommentForm()
         return render(request, 'my_blog_app/post_detail.html', context={
             'post': post,
             'common_tags': common_tags,
             'last_posts': last_posts,
+            'comment_form': comment_form
+        })
+
+    def post(self, request, slug, *args, **kwargs):
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            text = request.POST['text']
+            username = self.request.user
+            post = get_object_or_404(Post, url=slug)
+            comment = Comment.objects.create(post=post, username=username, text=text)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        return render(request, 'my_blog_app/post_detail.html', context={
+            'comment_form': comment_form
         })
 
 
@@ -128,7 +142,7 @@ class SignInView(View):
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
-            user = authentication(request, username=username, password=password)
+            user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
                 return HttpResponseRedirect('/')

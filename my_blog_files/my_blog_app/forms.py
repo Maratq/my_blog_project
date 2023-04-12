@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from .models import Comment
 
 
 class FeedbackForm(forms.Form):
@@ -101,3 +102,16 @@ class SignInForm(forms.Form):
             'id': "inputPassword",
         })
     )
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3
+            }),
+        }
