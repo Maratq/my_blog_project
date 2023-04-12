@@ -6,7 +6,25 @@ from .forms import SignUpForm, SignInForm, FeedbackForm
 from django.contrib.auth import login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.mail import send_mail, BadHeaderError
+from django.db.models import Q
 
+
+class SearchResultsView(View):
+    def get(self, request, *args, **kwargs):
+        query = self.request.GET.get('q')
+        results = ""
+        if query:
+            results = Post.objects.filter(
+                Q(h1__icontains=query) | Q(content__icontains=query)
+            )
+        paginator = Paginator(results, 6)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'my_blog_app/search.html', context={
+            'title': 'Поиск',
+            'results': page_obj,
+            'count': paginator.count
+        })
 
 class FeedbackView(View):
     def get(self, request, *args, **kwargs):
@@ -23,17 +41,14 @@ class FeedbackView(View):
             from_email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
-           #try:
-           #    send_mail(f'От {name} | {subject}', message, from_email, [''])
-           #except BadHeaderError:
-           #    return HttpResponse('Невалидный заголовок')
+            # try:
+            #    send_mail(f'От {name} | {subject}', message, from_email, [''])
+            # except BadHeaderError:
+            #    return HttpResponse('Невалидный заголовок')
             return HttpResponseRedirect('success')
         return render(request, 'my_blog_app/contact.html', context={
             'form': form,
         })
-
-
-
 
 
 class SuccessView(View):
@@ -95,7 +110,7 @@ class SignInView(View):
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
-            user = authenticate(request, username=username, password=password)
+            user = authentication(request, username=username, password=password)
             if user is not None:
                 login(request, user)
                 return HttpResponseRedirect('/')
