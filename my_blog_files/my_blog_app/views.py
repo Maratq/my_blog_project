@@ -4,8 +4,8 @@ from django.core.paginator import Paginator
 from .models import Post, Comment
 from .forms import SignUpForm, SignInForm, FeedbackForm, CommentForm
 from django.contrib.auth import login,authenticate
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponseRedirect
+#from django.core.mail import send_mail, BadHeaderError #отправка писем на почту
 from django.db.models import Q
 from taggit.models import Tag
 
