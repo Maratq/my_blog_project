@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (
+from . views import (
     MainView, PostDetailView, SignUpView,SignInView,SuccessView,FeedbackView,SearchResultsView,TagView
 )
 from django.contrib.auth.views import LogoutView
