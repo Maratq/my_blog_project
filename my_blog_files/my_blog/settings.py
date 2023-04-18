@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-m$6qy8=5ef&rb#buw=!k-)3wyx&h)mf05l_pont%)0_f5mfob5'
 
 
-DEBUG = True
+DEBUG = False
 
 
 ALLOWED_HOSTS = ['*']
@@ -24,7 +24,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'my_blog_app',
+    
     'ckeditor',
     'ckeditor_uploader',
     'taggit',
