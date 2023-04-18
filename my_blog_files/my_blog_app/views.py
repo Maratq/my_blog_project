@@ -5,7 +5,7 @@ from .models import Post, Comment
 from .forms import SignUpForm, SignInForm, FeedbackForm, CommentForm
 from django.contrib.auth import login,authenticate
 from django.http import HttpResponseRedirect
-#from django.core.mail import send_mail, BadHeaderError #отправка писем на почту
+from django.core.mail import send_mail, BadHeaderError 
 from django.db.models import Q
 from taggit.models import Tag
 
@@ -55,10 +55,10 @@ class FeedbackView(View):
             from_email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
-            # try:
-            #    send_mail(f'От {name} | {subject}', message, from_email, [''])
-            # except BadHeaderError:
-            #    return HttpResponse('Невалидный заголовок')
+            try:
+               send_mail(f'От {name} | {subject}', message, from_email, [''])
+            except BadHeaderError:
+                return HttpResponse('Невалидный заголовок')
             return HttpResponseRedirect('success')
         return render(request, 'my_blog_app/contact.html', context={
             'form': form,
